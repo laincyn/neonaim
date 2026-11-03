@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEON AIM 3D</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="gl"></canvas>
+  <div id="vig"></div>
+  <div id="fps" class="hide">144 FPS</div>
+
+  <header id="hud" class="hide">
+    <div class="stat"><span class="label">SCORE</span><b id="score">0</b></div>
+    <div class="stat mid"><span class="label" id="modeName">GRIDSHOT</span><b id="time">60</b></div>
+    <div class="stat end"><span class="label">ACCURACY</span><b id="accTxt">100%</b><div class="acc"><i id="accBar"></i></div></div>
+  </header>
+
+  <div id="streak" class="hide">
+    <div id="killBadge"></div>
+    <b id="mult">x1.0</b>
+    <span id="stk">0 STREAK</span>
+  </div>
+
+  <div id="cross" class="xh"><i></i><i></i><i></i><i></i><u></u><s id="hm"></s></div>
+  <div id="banner"></div>
+  <div id="ppLayer"></div>
+
+  <main class="card" id="menu">
+    <h1>NEON<span>AIM</span></h1>
+    <p class="sub">3D AIM TRAINER</p>
+    <div class="modes" id="modes"></div>
+    <div class="row"><label>Difficulty</label><div class="seg" id="diff"></div></div>
+    <div class="row"><label>Duration</label><div class="seg" id="dur"></div></div>
+    <div class="row"><label>Sensitivity <em id="sensV"></em></label><input type="range" id="sens" min=".1" max="2" step=".01"></div>
+    <div class="row"><label>FOV <em id="fovV"></em></label><input type="range" id="fov" min="60" max="110" step="1"></div>
+    <div class="row"><label>Crosshair</label><div class="seg sw" id="col"></div></div>
+    <button class="cta" id="play">PLAY</button>
+    <button class="ghost" id="setBtn">SETTINGS &amp; ARSENAL</button>
+    <small>Click = shoot · 1-4 Gun · H Hand · B Scenery · R Restart · M Mute · ESC Pause</small>
+  </main>
+
+  <section class="card hide" id="pause">
+    <h2>PAUSED</h2>
+    <button class="cta" id="resume">RESUME</button>
+    <button class="ghost" id="pset">SETTINGS &amp; ARSENAL</button>
+    <button class="ghost" id="quit">QUIT TO MENU</button>
+  </section>
+
+  <section class="card wide hide" id="settings">
+    <h2>SETTINGS <span>&amp; ARSENAL</span></h2>
+    <div class="pv"><div class="xh" id="pvx"><i></i><i></i><i></i><i></i><u></u></div></div>
+    <div class="sgrid">
+      <div>
+        <div class="shead">CROSSHAIR</div>
+        <div class="row"><label>Size <em id="xlenV"></em></label><input type="range" id="xlen" min="2" max="24" step="1"></div>
+        <div class="row"><label>Gap <em id="xgapV"></em></label><input type="range" id="xgap" min="0" max="16" step="1"></div>
+        <div class="row"><label>Thickness <em id="xthV"></em></label><input type="range" id="xth" min="1" max="6" step="1"></div>
+        <div class="row"><label>Opacity <em id="xopV"></em></label><input type="range" id="xop" min=".2" max="1" step=".05"></div>
+        <div class="row"><label>Crosshair Col</label><input type="color" id="xcol"><div class="seg"><button id="xol">Outline</button><button id="xdot">Dot</button></div></div>
+
+        <div class="shead">TARGETS &amp; EDGES</div>
+        <div class="row"><label>Target Style</label><div class="seg" id="tmode"></div></div>
+        <div class="row"><label>Fill &amp; Edge Col</label>
+          <div class="cpack">
+            <span class="clbl">Fill</span><input type="color" id="tcol">
+            <span class="clbl">Edge</span><input type="color" id="tecol">
+          </div>
+          <div class="seg"><button id="tedge">Edge</button><button id="tglow">Halo</button></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="shead">WEAPON, HAND &amp; RECOIL</div>
+        <div class="row"><label>Weapon (1-4)</label><div class="seg" id="gun"></div></div>
+        <div class="row"><label>Viewmodel (H)</label><div class="seg" id="hand"></div></div>
+        <div class="row"><label>Recoil Mode</label><div class="seg" id="recoil"></div></div>
+
+        <div class="shead">SCENERY &amp; AUDIO</div>
+        <div class="row"><label>Scenery (B)</label><div class="seg" id="theme"></div></div>
+        <div class="row"><label>Solid BG Col</label><input type="color" id="bgcol"><div class="seg" id="sfx"></div></div>
+        <div class="row"><label>Volume <em id="volV"></em></label><input type="range" id="vol" min="0" max="1" step=".05"></div>
+        <div class="row"><label>Juice &amp; FX</label><div class="seg"><button id="trc">Tracers</button><button id="punch">FOV Punch</button><button id="redm">Low Motion</button><button id="fpsOn">FPS</button></div></div>
+        <div class="row"><label>Mouse DPI</label><input type="number" id="dpi" min="100" max="32000" step="50"></div>
+      </div>
+    </div>
+    <div class="row conv"><label>Convert Sens</label><select id="cgame"></select><input type="number" id="cval" min="0" step=".01" placeholder="in-game sens"><div class="seg"><button id="capply">Set</button></div></div>
+    <small id="cres">Converts a game's sensitivity to NEON AIM (same cm/360).</small>
+    <button class="cta" id="sback">BACK</button>
+  </section>
+
+  <section class="card wide hide" id="results"></section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
